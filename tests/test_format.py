@@ -1,5 +1,5 @@
 import csv
-import format_tests
+from tests import format_tests
 import glob
 import os
 import unittest

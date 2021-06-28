@@ -1,5 +1,5 @@
 import argparse
-from test_format import FileFormatTests
+from tests.test_format import FileFormatTests
 import unittest
 
 
