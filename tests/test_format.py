@@ -6,7 +6,7 @@ import unittest
 
 
 class FileFormatTests(unittest.TestCase):
-    root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+    root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 
     def test_format(self):
         for csv_file in FileFormatTests.__get_csv_files():
