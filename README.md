@@ -5,8 +5,8 @@ A collection of tests to validate the format of OpenElections data files.
 ```
 $ python3 run_tests.py <absolute path to data repository>
 ```
-The data are expected to be contained in CSV files that reside in directories
-named by the corresponding election years.  For example,
+The data are expected to be contained in CSV files that reside under
+directories named by the corresponding election years.  For example,
 
 ```
 <data repository>
