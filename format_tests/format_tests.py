@@ -218,6 +218,11 @@ class NonIntegerVotes(RowTest):
         else:
             self.__votes_index = None
 
+        if "candidate" in lowercase_headers:
+            self.__candidate_index = lowercase_headers.index("candidate")
+        else:
+            self.__candidate_index = None
+
     @property
     def passed(self) -> bool:
         return len(self.__failures) == 0
@@ -246,6 +251,12 @@ class NonIntegerVotes(RowTest):
         try:
             float_value = float(row[self.__votes_index])
         except ValueError:
+            return
+
+        # There are some rare cases where the value represents a turnout percentage.  We will try and avoid these rows.
+        percentages = {"%", "pct", "percent"}
+        if (self.__candidate_index is not None) and (self.__candidate_index < len(row))\
+                and any(x in row[self.__candidate_index].lower() for x in percentages):
             return
 
         # This allows for "3" and "3.0", but not "3.1".
