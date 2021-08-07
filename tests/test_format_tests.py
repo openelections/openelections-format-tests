@@ -68,3 +68,18 @@ class ConsecutiveSpacesTest(unittest.TestCase):
         format_test = format_tests.ConsecutiveSpaces()
         format_test.test(["a", "b \n", "d"])
         self.assertFalse(format_test.passed)
+
+
+class EmptyRowsTest(unittest.TestCase):
+    def test_row(self):
+        format_test = format_tests.EmptyRows()
+        format_test.test(["a", "b", ""])
+        self.assertTrue(format_test.passed)
+
+        format_test = format_tests.EmptyRows()
+        format_test.test(["", "", ""])
+        self.assertFalse(format_test.passed)
+
+        format_test = format_tests.EmptyRows()
+        format_test.test([" ", "\t", "\n"])
+        self.assertFalse(format_test.passed)
