@@ -83,3 +83,20 @@ class EmptyRowsTest(unittest.TestCase):
         format_test = format_tests.EmptyRows()
         format_test.test([" ", "\t", "\n"])
         self.assertFalse(format_test.passed)
+
+
+class InconsistentNumberOfColumnsTest(unittest.TestCase):
+    def test_row(self):
+        headers = ["a", "b", "c"]
+
+        format_test = format_tests.InconsistentNumberOfColumns(headers)
+        format_test.test(["d", "e", ""])
+        self.assertTrue(format_test.passed)
+
+        format_test = format_tests.InconsistentNumberOfColumns(headers)
+        format_test.test(["d", "e"])
+        self.assertFalse(format_test.passed)
+
+        format_test = format_tests.InconsistentNumberOfColumns(headers)
+        format_test.test(["d", "e", "f", "g"])
+        self.assertFalse(format_test.passed)
