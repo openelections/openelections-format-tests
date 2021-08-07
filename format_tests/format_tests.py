@@ -206,6 +206,53 @@ class InconsistentNumberOfColumns(RowTest):
             self.__failures[self.current_row] = row
 
 
+class NonIntegerVotes(RowTest):
+    def __init__(self, headers: list[str]):
+        super().__init__()
+        self.__failures = {}
+        self.__headers = headers
+
+        lowercase_headers = [x.lower() for x in headers]
+        if "votes" in lowercase_headers:
+            self.__votes_index = lowercase_headers.index("votes")
+        else:
+            self.__votes_index = None
+
+    @property
+    def passed(self) -> bool:
+        return len(self.__failures) == 0
+
+    def get_failure_message(self, max_examples=10) -> str:
+        message = f"There are {len(self.__failures)} rows with votes that aren't integers:\n\n" \
+                  f"\tHeaders: {self.__headers}:"
+
+        count = 1
+        for key, value in self.__failures.items():
+            message += f"\n\tRow {key}: {value}"
+            count += 1
+            if count > max_examples:
+                message += f"\n\t[Truncated to {max_examples} examples]"
+                break
+
+        return message
+
+    def test(self, row: list):
+        if (self.__votes_index is None) or (self.__votes_index >= len(row)):
+            return
+
+        # If the value isn't numeric, skip the test.  This can be due to the row having an inconsistent number of
+        # columns (hence the index of the "votes" column is invalid), or the value has been redacted and is
+        # represented by a non-numeric character.
+        try:
+            float_value = float(row[self.__votes_index])
+        except ValueError:
+            return
+
+        # This allows for "3" and "3.0", but not "3.1".
+        if not float(float_value).is_integer():
+            self.__failures[self.current_row] = row
+
+
 class LeadingAndTrailingSpaces(ValueTest):
     @property
     def description(self):
