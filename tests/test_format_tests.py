@@ -1,5 +1,6 @@
-from format_tests import format_tests
 import unittest
+
+from format_tests import format_tests
 
 
 class ConsecutiveSpacesTest(unittest.TestCase):
