@@ -15,3 +15,18 @@ class EmptyHeadersTest(unittest.TestCase):
         format_test = format_tests.EmptyHeaders()
         format_test.test(["", "", "c"])
         self.assertFalse(format_test.passed)
+
+
+class LowercaseHeadersTest(unittest.TestCase):
+    def test_headers(self):
+        format_test = format_tests.LowercaseHeaders()
+        format_test.test(["a", "b", "c"])
+        self.assertTrue(format_test.passed)
+
+        format_test = format_tests.LowercaseHeaders()
+        format_test.test(["a", "B", "c"])
+        self.assertFalse(format_test.passed)
+
+        format_test = format_tests.LowercaseHeaders()
+        format_test.test(["A", "B", "c"])
+        self.assertFalse(format_test.passed)
