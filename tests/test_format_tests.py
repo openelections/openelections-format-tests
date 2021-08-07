@@ -123,3 +123,14 @@ class LeadingAndTrailingSpacesTest(unittest.TestCase):
         format_test = format_tests.LeadingAndTrailingSpaces()
         format_test.test(["a", "b\n", "c"])
         self.assertFalse(format_test.passed)
+
+
+class PrematureLineBreaks(unittest.TestCase):
+    def test_row(self):
+        format_test = format_tests.PrematureLineBreaks()
+        format_test.test(["a", "b", "c"])
+        self.assertTrue(format_test.passed)
+
+        format_test = format_tests.PrematureLineBreaks()
+        format_test.test(["a", "b\nc", "d"])
+        self.assertFalse(format_test.passed)
