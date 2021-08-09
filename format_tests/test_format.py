@@ -55,9 +55,7 @@ class FileFormatTests(unittest.TestCase):
 
     @staticmethod
     def __get_csv_files():
-        data_folders = glob.glob(os.path.join(FileFormatTests.root_path, "[0-9]" * 4))
-        for data_folder in data_folders:
-            for root, dirs, files in os.walk(data_folder):
-                for file in files:
-                    if file.lower().endswith(".csv"):
-                        yield os.path.join(root, file)
+        files = glob.glob(os.path.join(FileFormatTests.root_path, "[0-9]" * 4, "**", "*"), recursive=True)
+        for file in files:
+            if file.lower().endswith(".csv"):
+                yield file
