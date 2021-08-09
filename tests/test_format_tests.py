@@ -9,10 +9,12 @@ class ConsecutiveSpacesTest(unittest.TestCase):
         format_test.test(["a", "b", "c"])
         self.assertTrue(format_test.passed)
 
+        good_value = "b"
         bad_values = ["b  c", "  b", "b  ", "b \t", "b \n"]
-        for value in bad_values:
+        for bad_value in bad_values:
             format_test = format_tests.ConsecutiveSpaces()
-            format_test.test(["a", value, "d"])
+            format_test.test(["a", bad_value, "d"])
+            format_test.test(["a", good_value, "d"])
             self.assertFalse(format_test.passed)
 
 
@@ -39,10 +41,12 @@ class EmptyRowsTest(unittest.TestCase):
 
         format_test = format_tests.EmptyRows()
         format_test.test(["", "", ""])
+        format_test.test(["a", "b", ""])
         self.assertFalse(format_test.passed)
 
         format_test = format_tests.EmptyRows()
         format_test.test([" ", "\t", "\n"])
+        format_test.test(["a", "b", ""])
         self.assertFalse(format_test.passed)
 
 
@@ -56,10 +60,12 @@ class InconsistentNumberOfColumnsTest(unittest.TestCase):
 
         format_test = format_tests.InconsistentNumberOfColumns(headers)
         format_test.test(["d", "e"])
+        format_test.test(["d", "e", ""])
         self.assertFalse(format_test.passed)
 
         format_test = format_tests.InconsistentNumberOfColumns(headers)
         format_test.test(["d", "e", "f", "g"])
+        format_test.test(["d", "e", ""])
         self.assertFalse(format_test.passed)
 
 
@@ -69,10 +75,12 @@ class LeadingAndTrailingSpacesTest(unittest.TestCase):
         format_test.test(["a", "b", "c"])
         self.assertTrue(format_test.passed)
 
+        good_value = "b"
         bad_values = [" b", "b ", "\tb", "b\n"]
-        for value in bad_values:
+        for bad_value in bad_values:
             format_test = format_tests.LeadingAndTrailingSpaces()
-            format_test.test(["a", value, "c"])
+            format_test.test(["a", bad_value, "c"])
+            format_test.test(["a", good_value, "c"])
             self.assertFalse(format_test.passed)
 
 
@@ -99,6 +107,7 @@ class PrematureLineBreaks(unittest.TestCase):
 
         format_test = format_tests.PrematureLineBreaks()
         format_test.test(["a", "b\nc", "d"])
+        format_test.test(["a", "b", "c"])
         self.assertFalse(format_test.passed)
 
 
