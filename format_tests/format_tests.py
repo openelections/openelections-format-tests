@@ -187,8 +187,10 @@ class InconsistentNumberOfColumns(RowTest):
         return len(self.__failures) == 0
 
     def get_failure_message(self, max_examples=10) -> str:
-        message = f"Header {self.__headers} has {len(self.__headers)} entries, but there are {len(self.__failures)} " \
-                  f"rows with an inconsistent number of columns:\n"
+        message = f"Header has {len(self.__headers)} entries, but there are {len(self.__failures)} " \
+                  f"rows with an inconsistent number of columns:\n\n" \
+                  f"\tHeaders ({len(self.__headers)} entries): {self.__headers}:"
+
         count = 1
         for key, value in self.__failures.items():
             message += f"\n\tRow {key} ({len(value)} entries): {value}"
