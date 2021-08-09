@@ -99,6 +99,29 @@ class LowercaseHeadersTest(unittest.TestCase):
         self.assertFalse(format_test.passed)
 
 
+class NonIntegerVotesTest(unittest.TestCase):
+    def test_headers(self):
+        format_test = format_tests.NonIntegerVotes(["a", "b", "c"])
+        format_test.test(["a", "1.2", "c"])
+        self.assertTrue(format_test.passed)
+
+        format_test = format_tests.NonIntegerVotes(["a", "Percentage", "c"])
+        format_test.test(["a", "1.2", "c"])
+        self.assertTrue(format_test.passed)
+
+        good_values = ["*", "2", "2.0", "-2", "-2.0"]
+        format_test = format_tests.NonIntegerVotes(["a", "votes", "c"])
+        for value in good_values:
+            format_test.test(["a", value, "c"])
+            self.assertTrue(format_test.passed)
+
+        bad_values = ["1.2", "-1.2", "0.01"]
+        format_test = format_tests.NonIntegerVotes(["a", "votes", "c"])
+        for value in bad_values:
+            format_test.test(["a", value, "c"])
+            self.assertFalse(format_test.passed)
+
+
 class PrematureLineBreaks(unittest.TestCase):
     def test_row(self):
         format_test = format_tests.PrematureLineBreaks()
