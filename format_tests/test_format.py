@@ -55,7 +55,6 @@ class FileFormatTests(unittest.TestCase):
 
     @staticmethod
     def __get_csv_files():
-        files = glob.glob(os.path.join(FileFormatTests.root_path, "[0-9]" * 4, "**", "*"), recursive=True)
-        for file in files:
+        for file in glob.glob(os.path.join(FileFormatTests.root_path, "[0-9]" * 4, "**", "*"), recursive=True):
             if file.lower().endswith(".csv"):
                 yield file
