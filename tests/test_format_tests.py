@@ -9,25 +9,11 @@ class ConsecutiveSpacesTest(unittest.TestCase):
         format_test.test(["a", "b", "c"])
         self.assertTrue(format_test.passed)
 
-        format_test = format_tests.ConsecutiveSpaces()
-        format_test.test(["a", "b  c", "d"])
-        self.assertFalse(format_test.passed)
-
-        format_test = format_tests.ConsecutiveSpaces()
-        format_test.test(["a", "  b", "d"])
-        self.assertFalse(format_test.passed)
-
-        format_test = format_tests.ConsecutiveSpaces()
-        format_test.test(["a", "b  ", "d"])
-        self.assertFalse(format_test.passed)
-
-        format_test = format_tests.ConsecutiveSpaces()
-        format_test.test(["a", "b \t", "d"])
-        self.assertFalse(format_test.passed)
-
-        format_test = format_tests.ConsecutiveSpaces()
-        format_test.test(["a", "b \n", "d"])
-        self.assertFalse(format_test.passed)
+        bad_values = ["b  c", "  b", "b  ", "b \t", "b \n"]
+        for value in bad_values:
+            format_test = format_tests.ConsecutiveSpaces()
+            format_test.test(["a", value, "d"])
+            self.assertFalse(format_test.passed)
 
 
 class EmptyHeadersTest(unittest.TestCase):
@@ -83,21 +69,11 @@ class LeadingAndTrailingSpacesTest(unittest.TestCase):
         format_test.test(["a", "b", "c"])
         self.assertTrue(format_test.passed)
 
-        format_test = format_tests.LeadingAndTrailingSpaces()
-        format_test.test(["a", " b", "c"])
-        self.assertFalse(format_test.passed)
-
-        format_test = format_tests.LeadingAndTrailingSpaces()
-        format_test.test(["a", "b ", "c"])
-        self.assertFalse(format_test.passed)
-
-        format_test = format_tests.LeadingAndTrailingSpaces()
-        format_test.test(["a", "\tb", "c"])
-        self.assertFalse(format_test.passed)
-
-        format_test = format_tests.LeadingAndTrailingSpaces()
-        format_test.test(["a", "b\n", "c"])
-        self.assertFalse(format_test.passed)
+        bad_values = [" b", "b ", "\tb", "b\n"]
+        for value in bad_values:
+            format_test = format_tests.LeadingAndTrailingSpaces()
+            format_test.test(["a", value, "c"])
+            self.assertFalse(format_test.passed)
 
 
 class LowercaseHeadersTest(unittest.TestCase):
