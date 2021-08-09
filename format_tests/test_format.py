@@ -11,32 +11,32 @@ class FileFormatTests(unittest.TestCase):
     def test_format(self):
         for csv_file in FileFormatTests.__get_csv_files():
             short_path = os.path.relpath(csv_file, start=FileFormatTests.root_path)
-            tests = []
+
+            tests = set()
+
+            header_tests = {
+                format_tests.EmptyHeaders(),
+                format_tests.LowercaseHeaders(),
+                format_tests.UnknownHeaders(),
+            }
+            tests.update(header_tests)
+
+            tests.add(format_tests.ConsecutiveSpaces())
+            tests.add(format_tests.EmptyRows())
+            tests.add(format_tests.LeadingAndTrailingSpaces())
+            tests.add(format_tests.PrematureLineBreaks())
 
             with self.subTest(msg=f"{short_path}"):
                 with open(csv_file, "r") as csv_data:
                     reader = csv.reader(csv_data)
                     headers = next(reader)
 
-                    header_tests = [
-                        format_tests.EmptyHeaders(),
-                        format_tests.LowercaseHeaders(),
-                        format_tests.UnknownHeaders(),
-                    ]
-                    tests.extend(header_tests)
+                    tests.add(format_tests.InconsistentNumberOfColumns(headers))
 
-                    row_tests = [
-                        format_tests.ConsecutiveSpaces(),
-                        format_tests.EmptyRows(),
-                        format_tests.InconsistentNumberOfColumns(headers),
-                        format_tests.LeadingAndTrailingSpaces(),
-                        format_tests.PrematureLineBreaks(),
-                    ]
-                    tests.extend(row_tests)
-
-                    for test in header_tests:
+                    for test in tests:
                         test.test(headers)
 
+                    row_tests = tests - header_tests
                     for row in reader:
                         for test in row_tests:
                             test.current_row = reader.line_num
