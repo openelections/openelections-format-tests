@@ -116,7 +116,7 @@ class NonIntegerVotesTest(unittest.TestCase):
             self.assertTrue(format_test.passed)
 
         bad_values = ["1.2", "-1.2", "0.01"]
-        format_test = format_tests.NonIntegerVotes(["a", "votes", "c"])
+        format_test = format_tests.NonIntegerVotes(["a", "votes ", "c"])
         for value in bad_values:
             format_test.test(["a", value, "c"])
             self.assertFalse(format_test.passed)

@@ -212,7 +212,7 @@ class NonIntegerVotes(RowTest):
         self.__failures = {}
         self.__headers = headers
 
-        lowercase_headers = [x.lower() for x in headers]
+        lowercase_headers = [x.strip().lower() for x in headers]
         if "votes" in lowercase_headers:
             self.__votes_index = lowercase_headers.index("votes")
         else:
