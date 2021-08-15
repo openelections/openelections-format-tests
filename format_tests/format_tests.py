@@ -76,7 +76,7 @@ class EmptyHeaders(FormatTest):
         self.__passed = False
 
     @property
-    def passed(self) -> bool:
+    def passed(self):
         return self.__passed
 
     def get_failure_message(self, max_examples=0):
@@ -94,7 +94,7 @@ class LowercaseHeaders(FormatTest):
         self.__passed = False
 
     @property
-    def passed(self) -> bool:
+    def passed(self):
         return self.__passed
 
     def get_failure_message(self, max_examples=0):
@@ -113,7 +113,7 @@ class MissingHeaders(FormatTest):
         self.__required_headers = required_headers
 
     @property
-    def passed(self) -> bool:
+    def passed(self):
         return self.__passed
 
     def get_failure_message(self, max_examples=0):
@@ -131,7 +131,7 @@ class UnknownHeaders(FormatTest):
         self.__passed = False
 
     @property
-    def passed(self) -> bool:
+    def passed(self):
         return self.__passed
 
     def get_failure_message(self, max_examples=0):
@@ -183,10 +183,10 @@ class InconsistentNumberOfColumns(RowTest):
         self.__headers = headers
 
     @property
-    def passed(self) -> bool:
+    def passed(self):
         return len(self.__failures) == 0
 
-    def get_failure_message(self, max_examples=10) -> str:
+    def get_failure_message(self, max_examples=10):
         message = f"Header has {len(self.__headers)} entries, but there are {len(self.__failures)} " \
                   f"rows with an inconsistent number of columns:\n\n" \
                   f"\tHeaders ({len(self.__headers)} entries): {self.__headers}:"
@@ -224,10 +224,10 @@ class NonIntegerVotes(RowTest):
             self.__candidate_index = None
 
     @property
-    def passed(self) -> bool:
+    def passed(self):
         return len(self.__failures) == 0
 
-    def get_failure_message(self, max_examples=10) -> str:
+    def get_failure_message(self, max_examples=10):
         message = f"There are {len(self.__failures)} rows with votes that aren't integers:\n\n" \
                   f"\tHeaders: {self.__headers}:"
 
