@@ -62,7 +62,7 @@ class ValueTest(RowTest):
     def is_bad_value(self, value) -> bool:
         pass
 
-    def test(self, row):
+    def test(self, row: list):
         for entry in row:
             if self.is_bad_value(entry):
                 self.__failures[self.current_row] = row
