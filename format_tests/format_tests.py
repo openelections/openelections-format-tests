@@ -212,11 +212,13 @@ class NonIntegerVotes(RowTest):
         self.__failures = {}
         self.__headers = headers
 
+        columns_to_check = {"absentee", "early_voting", "election_day", "mail", "provisional", "votes"}
         lowercase_headers = [x.strip().lower() for x in headers]
-        if "votes" in lowercase_headers:
-            self.__votes_index = lowercase_headers.index("votes")
-        else:
-            self.__votes_index = None
+        indices_to_check = []
+        for index, header in enumerate(lowercase_headers):
+            if header in columns_to_check:
+                indices_to_check.append(index)
+        self.__indices_to_check = indices_to_check
 
         if "candidate" in lowercase_headers:
             self.__candidate_index = lowercase_headers.index("candidate")
@@ -242,26 +244,26 @@ class NonIntegerVotes(RowTest):
         return message
 
     def test(self, row: list):
-        if (self.__votes_index is None) or (self.__votes_index >= len(row)):
-            return
+        if len(row) == len(self.__headers):
+            for value in (row[i] for i in self.__indices_to_check):
+                # There are some rare cases where the value represents a turnout percentage.  We will try and avoid
+                # these rows.
+                percentages = {"%", "pct", "percent"}
+                if self.__candidate_index and (self.__candidate_index < len(row)) \
+                        and any(x in row[self.__candidate_index].lower() for x in percentages):
+                    continue
 
-        # If the value isn't numeric, skip the test.  This can be due to the row having an inconsistent number of
-        # columns (hence the index of the "votes" column is invalid), or the value has been redacted and is
-        # represented by a non-numeric character.
-        try:
-            float_value = float(row[self.__votes_index])
-        except ValueError:
-            return
+                # If the value isn't numeric, skip the test.  This can be due to the row having an inconsistent
+                # number of columns (hence the index of the "votes" column is invalid), or the value has been
+                # redacted and is represented by a non-numeric character.
+                try:
+                    float_value = float(value)
+                except ValueError:
+                    continue
 
-        # There are some rare cases where the value represents a turnout percentage.  We will try and avoid these rows.
-        percentages = {"%", "pct", "percent"}
-        if (self.__candidate_index is not None) and (self.__candidate_index < len(row))\
-                and any(x in row[self.__candidate_index].lower() for x in percentages):
-            return
-
-        # This allows for "3" and "3.0", but not "3.1".
-        if not float(float_value).is_integer():
-            self.__failures[self.current_row] = row
+                # This allows for "3" and "3.0", but not "3.1".
+                if not float(float_value).is_integer():
+                    self.__failures[self.current_row] = row
 
 
 class LeadingAndTrailingSpaces(ValueTest):
