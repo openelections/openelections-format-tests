@@ -134,6 +134,18 @@ class PrematureLineBreaks(unittest.TestCase):
         self.assertFalse(format_test.passed)
 
 
+class TabCharacters(unittest.TestCase):
+    def test_row(self):
+        format_test = format_tests.TabCharacters()
+        format_test.test(["a", "b", "c"])
+        self.assertTrue(format_test.passed)
+
+        format_test = format_tests.TabCharacters()
+        format_test.test(["a", "b\tc", "d"])
+        format_test.test(["a", "b", "c"])
+        self.assertFalse(format_test.passed)
+
+
 class UnknownHeadersTest(unittest.TestCase):
     def test_headers(self):
         format_test = format_tests.UnknownHeaders()
