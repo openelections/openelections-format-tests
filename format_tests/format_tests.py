@@ -46,15 +46,16 @@ class ValueTest(RowTest):
     def passed(self):
         return len(self.__failures) == 0
 
-    def get_failure_message(self, max_examples=10):
+    def get_failure_message(self, max_examples=-1):
         message = f"There are {len(self.__failures)} rows that have entries with {self.description}:\n"
-        count = 1
+        count = 0
         for key, value in self.__failures.items():
-            message += f"\n\tRow {key}: {value}"
-            count += 1
-            if count > max_examples:
+            if (max_examples >= 0) and (count >= max_examples):
                 message += f"\n\t[Truncated to {max_examples} examples]"
-                break
+                return message
+            else:
+                message += f"\n\tRow {key}: {value}"
+                count += 1
 
         return message
 
@@ -186,18 +187,19 @@ class InconsistentNumberOfColumns(RowTest):
     def passed(self):
         return len(self.__failures) == 0
 
-    def get_failure_message(self, max_examples=10):
+    def get_failure_message(self, max_examples=-1):
         message = f"Header has {len(self.__headers)} entries, but there are {len(self.__failures)} " \
                   f"rows with an inconsistent number of columns:\n\n" \
                   f"\tHeaders ({len(self.__headers)} entries): {self.__headers}:"
 
-        count = 1
+        count = 0
         for key, value in self.__failures.items():
-            message += f"\n\tRow {key} ({len(value)} entries): {value}"
-            count += 1
-            if count > max_examples:
+            if (max_examples >= 0) and (count >= max_examples):
                 message += f"\n\t[Truncated to {max_examples} examples]"
-                break
+                return message
+            else:
+                message += f"\n\tRow {key} ({len(value)} entries): {value}"
+                count += 1
 
         return message
 
@@ -229,17 +231,18 @@ class NonIntegerVotes(RowTest):
     def passed(self):
         return len(self.__failures) == 0
 
-    def get_failure_message(self, max_examples=10):
+    def get_failure_message(self, max_examples=-1):
         message = f"There are {len(self.__failures)} rows with votes that aren't integers:\n\n" \
                   f"\tHeaders: {self.__headers}:"
 
-        count = 1
+        count = 0
         for key, value in self.__failures.items():
-            message += f"\n\tRow {key}: {value}"
-            count += 1
-            if count > max_examples:
+            if (max_examples >= 0) and (count >= max_examples):
                 message += f"\n\t[Truncated to {max_examples} examples]"
-                break
+                return message
+            else:
+                message += f"\n\tRow {key}: {value}"
+                count += 1
 
         return message
 
