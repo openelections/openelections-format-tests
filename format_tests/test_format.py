@@ -72,6 +72,7 @@ class FileFormatTests(TestCase):
                     tests.add(format_tests.NonIntegerVotes(headers))
 
                     for test in tests:
+                        test.current_row = reader.line_num
                         test.test(headers)
 
                     row_tests = tests - header_tests
