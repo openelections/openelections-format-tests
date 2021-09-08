@@ -82,15 +82,24 @@ class InconsistentNumberOfColumnsTest(unittest.TestCase):
         format_test.test(["d", "e", ""])
         self.assertTrue(format_test.passed)
 
-        format_test = format_tests.InconsistentNumberOfColumns(headers)
-        format_test.test(["d", "e"])
-        format_test.test(["d", "e", ""])
-        self.assertFalse(format_test.passed)
+        rows = [
+            ["d", "e"],
+            ["d", "e", ""],
+            ["d", "e", "f", "g"],
+            ["d", "e", ""],
+        ]
 
         format_test = format_tests.InconsistentNumberOfColumns(headers)
-        format_test.test(["d", "e", "f", "g"])
-        format_test.test(["d", "e", ""])
+        for row in rows:
+            format_test.test(row)
         self.assertFalse(format_test.passed)
+
+        failure_message = format_test.get_failure_message()
+        self.assertRegex(failure_message, "2 rows.*inconsistent number of columns")
+        self.assertRegex(failure_message, f"Row 1.*" + re.escape(f"{rows[0]}"))
+        self.assertNotRegex(failure_message, "Row 2.*")
+        self.assertRegex(failure_message, f"Row 3.*" + re.escape(f"{rows[2]}"))
+        self.assertNotRegex(failure_message, "Row 4.*")
 
 
 class LeadingAndTrailingSpacesTest(unittest.TestCase):
