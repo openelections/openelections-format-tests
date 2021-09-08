@@ -136,13 +136,13 @@ class LowercaseHeadersTest(unittest.TestCase):
         format_test.test(["a", "b", "c"])
         self.assertTrue(format_test.passed)
 
+        header = ["a", "B", "c"]
         format_test = format_tests.LowercaseHeaders()
-        format_test.test(["a", "B", "c"])
+        format_test.test(header)
         self.assertFalse(format_test.passed)
 
-        format_test = format_tests.LowercaseHeaders()
-        format_test.test(["A", "B", "c"])
-        self.assertFalse(format_test.passed)
+        failure_message = format_test.get_failure_message()
+        self.assertRegex(failure_message, re.escape(f"{header}") + ".*lowercase")
 
 
 class NonIntegerVotesTest(unittest.TestCase):
