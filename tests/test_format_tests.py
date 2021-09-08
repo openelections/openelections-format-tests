@@ -44,13 +44,13 @@ class EmptyHeadersTest(unittest.TestCase):
         format_test.test(["a", "b", "c"])
         self.assertTrue(format_test.passed)
 
+        header = ["a", "", "c"]
         format_test = format_tests.EmptyHeaders()
-        format_test.test(["a", "", "c"])
+        format_test.test(header)
         self.assertFalse(format_test.passed)
 
-        format_test = format_tests.EmptyHeaders()
-        format_test.test(["", "", "c"])
-        self.assertFalse(format_test.passed)
+        failure_message = format_test.get_failure_message()
+        self.assertRegex(failure_message, re.escape(f"{header}") + ".*empty entries")
 
 
 class EmptyRowsTest(unittest.TestCase):
