@@ -182,10 +182,19 @@ class PrematureLineBreaks(unittest.TestCase):
         format_test.test(["a", "b", "c"])
         self.assertTrue(format_test.passed)
 
+        rows = [
+            ["a", "b\nc", "d"],
+            ["a", "b", "c"],
+        ]
+
         format_test = format_tests.PrematureLineBreaks()
-        format_test.test(["a", "b\nc", "d"])
-        format_test.test(["a", "b", "c"])
+        for row in rows:
+            format_test.test(row)
         self.assertFalse(format_test.passed)
+
+        failure_message = format_test.get_failure_message()
+        self.assertRegex(failure_message, f"Row 1.*" + re.escape(f"{rows[0]}"))
+        self.assertNotRegex(failure_message, "Row 2.*")
 
 
 class TabCharacters(unittest.TestCase):
