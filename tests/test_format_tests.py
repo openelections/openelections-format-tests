@@ -165,9 +165,15 @@ class NonIntegerVotesTest(unittest.TestCase):
         vote_columns = {"absentee", "early_voting", "election_day", "mail", "provisional", "votes"}
         for column in vote_columns:
             for value in bad_values:
+                bad_row = ["a", 1, value, "c"]
                 format_test = format_tests.NonIntegerVotes(["a", "votes ", column, "c"])
-                format_test.test(["a", 1, value, "c"])
+                format_test.test(["a", 1, 2, "c"])
+                format_test.test(bad_row)
                 self.assertFalse(format_test.passed)
+
+                failure_message = format_test.get_failure_message()
+                self.assertNotRegex(failure_message, "Row 1.*")
+                self.assertRegex(failure_message, f"Row 2.*" + re.escape(f"{bad_row}"))
 
 
 class PrematureLineBreaks(unittest.TestCase):
