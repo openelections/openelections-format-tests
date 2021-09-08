@@ -59,15 +59,19 @@ class EmptyRowsTest(unittest.TestCase):
         format_test.test(["a", "b", ""])
         self.assertTrue(format_test.passed)
 
-        format_test = format_tests.EmptyRows()
-        format_test.test(["", "", ""])
-        format_test.test(["a", "b", ""])
-        self.assertFalse(format_test.passed)
+        rows = [
+            ["", "", ""],
+            ["a", "b", ""],
+            [" ", "\t", "\n"]
+        ]
 
         format_test = format_tests.EmptyRows()
-        format_test.test([" ", "\t", "\n"])
-        format_test.test(["a", "b", ""])
+        for row in rows:
+            format_test.test(row)
         self.assertFalse(format_test.passed)
+
+        failure_message = format_test.get_failure_message()
+        self.assertRegex(failure_message, "2 empty rows")
 
 
 class InconsistentNumberOfColumnsTest(unittest.TestCase):
