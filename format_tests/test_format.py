@@ -72,13 +72,11 @@ class FileFormatTests(TestCase):
                     tests.add(format_tests.NonIntegerVotes(headers))
 
                     for test in tests:
-                        test.current_row = reader.line_num
                         test.test(headers)
 
                     row_tests = tests - header_tests
                     for row in reader:
                         for test in row_tests:
-                            test.current_row = reader.line_num
                             test.test(row)
 
                 passed = True
