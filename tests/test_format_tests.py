@@ -215,9 +215,13 @@ class UnknownHeadersTest(unittest.TestCase):
         format_test.test(["a", "b", "c"])
         self.assertTrue(format_test.passed)
 
+        bad_header = ["a", "UnkNowN", "c"]
         format_test = format_tests.UnknownHeaders()
-        format_test.test(["a", "UnkNowN", "c"])
+        format_test.test(bad_header)
         self.assertFalse(format_test.passed)
+
+        failure_message = format_test.get_failure_message()
+        self.assertRegex(failure_message, f"Header.*" + re.escape(f"{bad_header}") + ".*unknown entries")
 
 
 class RunTestsTest(unittest.TestCase):
