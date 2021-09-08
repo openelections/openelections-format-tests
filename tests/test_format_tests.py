@@ -108,13 +108,26 @@ class LeadingAndTrailingSpacesTest(unittest.TestCase):
         format_test.test(["a", "b", "c"])
         self.assertTrue(format_test.passed)
 
-        good_value = "b"
-        bad_values = [" b", "b ", "\tb", "b\n"]
-        for bad_value in bad_values:
-            format_test = format_tests.LeadingAndTrailingSpaces()
-            format_test.test(["a", bad_value, "c"])
-            format_test.test(["a", good_value, "c"])
-            self.assertFalse(format_test.passed)
+        rows = [
+            ["a", " b", "c"],
+            ["a", "b", "c"],
+            ["a", "b ", "c"],
+            ["a", "\tb", "c"],
+            ["a", "b\n", "c"],
+        ]
+
+        format_test = format_tests.LeadingAndTrailingSpaces()
+        for row in rows:
+            format_test.test(row)
+        self.assertFalse(format_test.passed)
+
+        failure_message = format_test.get_failure_message()
+        self.assertRegex(failure_message, "4 rows.*leading or trailing whitespace")
+        self.assertRegex(failure_message, f"Row 1.*" + re.escape(f"{rows[0]}"))
+        self.assertNotRegex(failure_message, "Row 2.*")
+        self.assertRegex(failure_message, f"Row 3.*" + re.escape(f"{rows[2]}"))
+        self.assertRegex(failure_message, f"Row 4.*" + re.escape(f"{rows[3]}"))
+        self.assertRegex(failure_message, f"Row 5.*" + re.escape(f"{rows[4]}"))
 
 
 class LowercaseHeadersTest(unittest.TestCase):
