@@ -14,13 +14,28 @@ class ConsecutiveSpacesTest(unittest.TestCase):
         format_test.test(["a", "b", "c"])
         self.assertTrue(format_test.passed)
 
-        good_value = "b"
-        bad_values = ["b  c", "  b", "b  ", "b \t", "b \n"]
-        for bad_value in bad_values:
-            format_test = format_tests.ConsecutiveSpaces()
-            format_test.test(["a", bad_value, "d"])
-            format_test.test(["a", good_value, "d"])
-            self.assertFalse(format_test.passed)
+        rows = [
+            ["a", "b  c", "d"],
+            ["a", "  b", "d"],
+            ["a", "b", "c"],
+            ["a", "b  ", "d"],
+            ["a", "b \t", "d"],
+            ["a", "b \n", "d"],
+        ]
+
+        format_test = format_tests.ConsecutiveSpaces()
+        for row in rows:
+            format_test.test(row)
+        self.assertFalse(format_test.passed)
+
+        failure_message = format_test.get_failure_message()
+        self.assertRegex(failure_message, "5 rows.*consecutive whitespace")
+        self.assertRegex(failure_message, f"Row 1.*" + re.escape(f"{rows[0]}"))
+        self.assertRegex(failure_message, f"Row 2.*" + re.escape(f"{rows[1]}"))
+        self.assertNotRegex(failure_message, "Row 3.*")
+        self.assertRegex(failure_message, f"Row 4.*" + re.escape(f"{rows[3]}"))
+        self.assertRegex(failure_message, f"Row 5.*" + re.escape(f"{rows[4]}"))
+        self.assertRegex(failure_message, f"Row 6.*" + re.escape(f"{rows[5]}"))
 
 
 class EmptyHeadersTest(unittest.TestCase):
