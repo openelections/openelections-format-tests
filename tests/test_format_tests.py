@@ -118,8 +118,8 @@ class NonIntegerVotesTest(unittest.TestCase):
         bad_values = ["1.2", "-1.2", "0.01"]
         vote_columns = {"absentee", "early_voting", "election_day", "mail", "provisional", "votes"}
         for column in vote_columns:
-            format_test = format_tests.NonIntegerVotes(["a", "votes ", column, "c"])
             for value in bad_values:
+                format_test = format_tests.NonIntegerVotes(["a", "votes ", column, "c"])
                 format_test.test(["a", 1, value, "c"])
                 self.assertFalse(format_test.passed)
 
