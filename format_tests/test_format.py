@@ -25,6 +25,7 @@ class FileFormatTests(unittest.TestCase):
             tests.add(format_tests.EmptyRows())
             tests.add(format_tests.LeadingAndTrailingSpaces())
             tests.add(format_tests.PrematureLineBreaks())
+            tests.add(format_tests.TabCharacters())
 
             with self.subTest(msg=f"{short_path}"):
                 with open(csv_file, "r") as csv_data:

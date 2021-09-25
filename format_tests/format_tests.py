@@ -291,3 +291,12 @@ class PrematureLineBreaks(ValueTest):
 
     def is_bad_value(self, value):
         return "\n" in value
+
+
+class TabCharacters(ValueTest):
+    @property
+    def description(self):
+        return "tab characters"
+
+    def is_bad_value(self, value):
+        return "\t" in value
