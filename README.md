@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/openelections/openelections-format-tests/actions/workflows/unit_tests.yml/badge.svg?branch=master)](https://github.com/openelections/openelections-format-tests/actions)
+[![Build Status](https://github.com/openelections/openelections-format-tests/actions/workflows/unit_tests.yml/badge.svg?branch=master)](https://github.com/openelections/openelections-format-tests/actions/workflows/unit_tests.yml?query=branch%3Amaster)
 
 # OpenElections Data Format Tests
 A collection of tests to validate the format of OpenElections data files.
