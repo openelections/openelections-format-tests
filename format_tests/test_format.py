@@ -8,6 +8,7 @@ import unittest
 
 class TestCase(unittest.TestCase):
     log_file = None
+    max_examples = -1
     root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 
     def __init__(self, *args, **kwargs):
@@ -79,7 +80,6 @@ class FileFormatTests(TestCase):
                             test.current_row = reader.line_num
                             test.test(row)
 
-                max_examples = 10
                 passed = True
                 short_message = ""
                 full_message = ""
@@ -87,7 +87,7 @@ class FileFormatTests(TestCase):
                 for test in tests:
                     if not test.passed:
                         passed = False
-                        short_message += f"\n\n* {test.get_failure_message(max_examples=max_examples)}"
+                        short_message += f"\n\n* {test.get_failure_message(max_examples=TestCase.max_examples)}"
                         if not is_first_message:
                             full_message += "\n\n"
                         full_message += f"* {test.get_failure_message()}"
