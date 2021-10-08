@@ -252,7 +252,8 @@ class NonIntegerVotes(RowTest):
                 # There are some rare cases where the value represents a turnout percentage.  We will try and avoid
                 # these rows.
                 percentages = {"%", "pct", "percent"}
-                if self.__candidate_index and any(x in row[self.__candidate_index].lower() for x in percentages):
+                if self.__candidate_index is not None \
+                        and any(x in row[self.__candidate_index].lower() for x in percentages):
                     continue
 
                 # If the value isn't numeric, skip the test.  This can be due to the row having an inconsistent
