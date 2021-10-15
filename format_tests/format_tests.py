@@ -27,9 +27,13 @@ class RowTest(FormatTest):
     def current_row(self) -> int:
         return self.__current_row
 
-    @current_row.setter
-    def current_row(self, value: int):
-        self.__current_row = value
+    def test(self, value):
+        self.__current_row += 1
+        self._test_row(value)
+
+    @abstractmethod
+    def _test_row(self, row: list[str]):
+        pass
 
 
 class ValueTest(RowTest):
@@ -63,7 +67,7 @@ class ValueTest(RowTest):
     def is_bad_value(self, value) -> bool:
         pass
 
-    def test(self, row: list):
+    def _test_row(self, row: list[str]):
         for entry in row:
             if self.is_bad_value(entry):
                 self.__failures[self.current_row] = row
@@ -168,7 +172,7 @@ class EmptyRows(RowTest):
     def get_failure_message(self, max_examples=0):
         return f"Has {self.__empty_row_count} empty rows."
 
-    def test(self, row: list):
+    def _test_row(self, row: list[str]):
         has_content = False
         for entry in row:
             has_content |= bool(EmptyRows.regex.search(entry))
@@ -203,7 +207,7 @@ class InconsistentNumberOfColumns(RowTest):
 
         return message
 
-    def test(self, row: list):
+    def _test_row(self, row: list[str]):
         if len(row) != len(self.__headers):
             self.__failures[self.current_row] = row
 
@@ -246,7 +250,7 @@ class NonIntegerVotes(RowTest):
 
         return message
 
-    def test(self, row: list):
+    def _test_row(self, row: list[str]):
         if len(row) == len(self.__headers):
             for value in (row[i] for i in self.__indices_to_check):
                 # There are some rare cases where the value represents a turnout percentage.  We will try and avoid

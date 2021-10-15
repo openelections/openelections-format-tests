@@ -14,13 +14,28 @@ class ConsecutiveSpacesTest(unittest.TestCase):
         format_test.test(["a", "b", "c"])
         self.assertTrue(format_test.passed)
 
-        good_value = "b"
-        bad_values = ["b  c", "  b", "b  ", "b \t", "b \n"]
-        for bad_value in bad_values:
-            format_test = format_tests.ConsecutiveSpaces()
-            format_test.test(["a", bad_value, "d"])
-            format_test.test(["a", good_value, "d"])
-            self.assertFalse(format_test.passed)
+        rows = [
+            ["a", "b  c", "d"],
+            ["a", "  b", "d"],
+            ["a", "b", "c"],
+            ["a", "b  ", "d"],
+            ["a", "b \t", "d"],
+            ["a", "b \n", "d"],
+        ]
+
+        format_test = format_tests.ConsecutiveSpaces()
+        for row in rows:
+            format_test.test(row)
+        self.assertFalse(format_test.passed)
+
+        failure_message = format_test.get_failure_message()
+        self.assertRegex(failure_message, "5 rows.*consecutive whitespace")
+        self.assertRegex(failure_message, f"Row 1.*" + re.escape(f"{rows[0]}"))
+        self.assertRegex(failure_message, f"Row 2.*" + re.escape(f"{rows[1]}"))
+        self.assertNotRegex(failure_message, "Row 3.*")
+        self.assertRegex(failure_message, f"Row 4.*" + re.escape(f"{rows[3]}"))
+        self.assertRegex(failure_message, f"Row 5.*" + re.escape(f"{rows[4]}"))
+        self.assertRegex(failure_message, f"Row 6.*" + re.escape(f"{rows[5]}"))
 
 
 class EmptyHeadersTest(unittest.TestCase):
@@ -29,13 +44,13 @@ class EmptyHeadersTest(unittest.TestCase):
         format_test.test(["a", "b", "c"])
         self.assertTrue(format_test.passed)
 
+        header = ["a", "", "c"]
         format_test = format_tests.EmptyHeaders()
-        format_test.test(["a", "", "c"])
+        format_test.test(header)
         self.assertFalse(format_test.passed)
 
-        format_test = format_tests.EmptyHeaders()
-        format_test.test(["", "", "c"])
-        self.assertFalse(format_test.passed)
+        failure_message = format_test.get_failure_message()
+        self.assertRegex(failure_message, re.escape(f"{header}") + ".*empty entries")
 
 
 class EmptyRowsTest(unittest.TestCase):
@@ -44,15 +59,19 @@ class EmptyRowsTest(unittest.TestCase):
         format_test.test(["a", "b", ""])
         self.assertTrue(format_test.passed)
 
-        format_test = format_tests.EmptyRows()
-        format_test.test(["", "", ""])
-        format_test.test(["a", "b", ""])
-        self.assertFalse(format_test.passed)
+        rows = [
+            ["", "", ""],
+            ["a", "b", ""],
+            [" ", "\t", "\n"]
+        ]
 
         format_test = format_tests.EmptyRows()
-        format_test.test([" ", "\t", "\n"])
-        format_test.test(["a", "b", ""])
+        for row in rows:
+            format_test.test(row)
         self.assertFalse(format_test.passed)
+
+        failure_message = format_test.get_failure_message()
+        self.assertRegex(failure_message, "2 empty rows")
 
 
 class InconsistentNumberOfColumnsTest(unittest.TestCase):
@@ -63,15 +82,24 @@ class InconsistentNumberOfColumnsTest(unittest.TestCase):
         format_test.test(["d", "e", ""])
         self.assertTrue(format_test.passed)
 
-        format_test = format_tests.InconsistentNumberOfColumns(headers)
-        format_test.test(["d", "e"])
-        format_test.test(["d", "e", ""])
-        self.assertFalse(format_test.passed)
+        rows = [
+            ["d", "e"],
+            ["d", "e", ""],
+            ["d", "e", "f", "g"],
+            ["d", "e", ""],
+        ]
 
         format_test = format_tests.InconsistentNumberOfColumns(headers)
-        format_test.test(["d", "e", "f", "g"])
-        format_test.test(["d", "e", ""])
+        for row in rows:
+            format_test.test(row)
         self.assertFalse(format_test.passed)
+
+        failure_message = format_test.get_failure_message()
+        self.assertRegex(failure_message, "2 rows.*inconsistent number of columns")
+        self.assertRegex(failure_message, f"Row 1.*" + re.escape(f"{rows[0]}"))
+        self.assertNotRegex(failure_message, "Row 2.*")
+        self.assertRegex(failure_message, f"Row 3.*" + re.escape(f"{rows[2]}"))
+        self.assertNotRegex(failure_message, "Row 4.*")
 
 
 class LeadingAndTrailingSpacesTest(unittest.TestCase):
@@ -80,13 +108,26 @@ class LeadingAndTrailingSpacesTest(unittest.TestCase):
         format_test.test(["a", "b", "c"])
         self.assertTrue(format_test.passed)
 
-        good_value = "b"
-        bad_values = [" b", "b ", "\tb", "b\n"]
-        for bad_value in bad_values:
-            format_test = format_tests.LeadingAndTrailingSpaces()
-            format_test.test(["a", bad_value, "c"])
-            format_test.test(["a", good_value, "c"])
-            self.assertFalse(format_test.passed)
+        rows = [
+            ["a", " b", "c"],
+            ["a", "b", "c"],
+            ["a", "b ", "c"],
+            ["a", "\tb", "c"],
+            ["a", "b\n", "c"],
+        ]
+
+        format_test = format_tests.LeadingAndTrailingSpaces()
+        for row in rows:
+            format_test.test(row)
+        self.assertFalse(format_test.passed)
+
+        failure_message = format_test.get_failure_message()
+        self.assertRegex(failure_message, "4 rows.*leading or trailing whitespace")
+        self.assertRegex(failure_message, f"Row 1.*" + re.escape(f"{rows[0]}"))
+        self.assertNotRegex(failure_message, "Row 2.*")
+        self.assertRegex(failure_message, f"Row 3.*" + re.escape(f"{rows[2]}"))
+        self.assertRegex(failure_message, f"Row 4.*" + re.escape(f"{rows[3]}"))
+        self.assertRegex(failure_message, f"Row 5.*" + re.escape(f"{rows[4]}"))
 
 
 class LowercaseHeadersTest(unittest.TestCase):
@@ -95,13 +136,13 @@ class LowercaseHeadersTest(unittest.TestCase):
         format_test.test(["a", "b", "c"])
         self.assertTrue(format_test.passed)
 
+        header = ["a", "B", "c"]
         format_test = format_tests.LowercaseHeaders()
-        format_test.test(["a", "B", "c"])
+        format_test.test(header)
         self.assertFalse(format_test.passed)
 
-        format_test = format_tests.LowercaseHeaders()
-        format_test.test(["A", "B", "c"])
-        self.assertFalse(format_test.passed)
+        failure_message = format_test.get_failure_message()
+        self.assertRegex(failure_message, re.escape(f"{header}") + ".*lowercase")
 
 
 class NonIntegerVotesTest(unittest.TestCase):
@@ -124,9 +165,15 @@ class NonIntegerVotesTest(unittest.TestCase):
         vote_columns = {"absentee", "early_voting", "election_day", "mail", "provisional", "votes"}
         for column in vote_columns:
             for value in bad_values:
+                bad_row = ["a", 1, value, "c"]
                 format_test = format_tests.NonIntegerVotes(["a", "votes ", column, "c"])
-                format_test.test(["a", 1, value, "c"])
+                format_test.test(["a", 1, 2, "c"])
+                format_test.test(bad_row)
                 self.assertFalse(format_test.passed)
+
+                failure_message = format_test.get_failure_message()
+                self.assertNotRegex(failure_message, "Row 1.*")
+                self.assertRegex(failure_message, f"Row 2.*" + re.escape(f"{bad_row}"))
 
 
 class PrematureLineBreaks(unittest.TestCase):
@@ -135,10 +182,19 @@ class PrematureLineBreaks(unittest.TestCase):
         format_test.test(["a", "b", "c"])
         self.assertTrue(format_test.passed)
 
+        rows = [
+            ["a", "b\nc", "d"],
+            ["a", "b", "c"],
+        ]
+
         format_test = format_tests.PrematureLineBreaks()
-        format_test.test(["a", "b\nc", "d"])
-        format_test.test(["a", "b", "c"])
+        for row in rows:
+            format_test.test(row)
         self.assertFalse(format_test.passed)
+
+        failure_message = format_test.get_failure_message()
+        self.assertRegex(failure_message, f"Row 1.*" + re.escape(f"{rows[0]}"))
+        self.assertNotRegex(failure_message, "Row 2.*")
 
 
 class TabCharacters(unittest.TestCase):
@@ -147,10 +203,19 @@ class TabCharacters(unittest.TestCase):
         format_test.test(["a", "b", "c"])
         self.assertTrue(format_test.passed)
 
+        rows = [
+            ["a", "b\tc", "d"],
+            ["a", "b", "c"],
+        ]
+
         format_test = format_tests.TabCharacters()
-        format_test.test(["a", "b\tc", "d"])
-        format_test.test(["a", "b", "c"])
+        for row in rows:
+            format_test.test(row)
         self.assertFalse(format_test.passed)
+
+        failure_message = format_test.get_failure_message()
+        self.assertRegex(failure_message, f"Row 1.*" + re.escape(f"{rows[0]}"))
+        self.assertNotRegex(failure_message, "Row 2.*")
 
 
 class UnknownHeadersTest(unittest.TestCase):
@@ -159,9 +224,13 @@ class UnknownHeadersTest(unittest.TestCase):
         format_test.test(["a", "b", "c"])
         self.assertTrue(format_test.passed)
 
+        bad_header = ["a", "UnkNowN", "c"]
         format_test = format_tests.UnknownHeaders()
-        format_test.test(["a", "UnkNowN", "c"])
+        format_test.test(bad_header)
         self.assertFalse(format_test.passed)
+
+        failure_message = format_test.get_failure_message()
+        self.assertRegex(failure_message, f"Header.*" + re.escape(f"{bad_header}") + ".*unknown entries")
 
 
 class RunTestsTest(unittest.TestCase):
