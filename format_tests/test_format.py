@@ -2,6 +2,7 @@ import csv
 import glob
 import logging
 import os
+import pathlib
 import unittest
 
 from format_tests import format_tests
@@ -71,6 +72,7 @@ class FileFormatTests(TestCase):
     def test_format(self):
         for csv_file in FileFormatTests.__get_csv_files():
             short_path = os.path.relpath(csv_file, start=TestCase.root_path)
+            year = pathlib.Path(short_path).parts[0]
 
             tests = set()
 
@@ -87,7 +89,7 @@ class FileFormatTests(TestCase):
             tests.add(format_tests.PrematureLineBreaks())
             tests.add(format_tests.TabCharacters())
 
-            with self.subTest(msg=f"{short_path}"):
+            with self.subTest(msg=f"{short_path}", group=year):
                 with open(csv_file, "r") as csv_data:
                     reader = csv.reader(csv_data)
                     headers = next(reader)
