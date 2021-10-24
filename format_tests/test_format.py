@@ -109,7 +109,7 @@ class FileFormatTests(TestCase):
                 short_message = ""
                 full_message = ""
                 is_first_message = True
-                for test in tests:
+                for test in sorted(tests, key=lambda x: type(x).__name__):
                     if not test.passed:
                         passed = False
                         short_message += f"\n\n* {test.get_failure_message(max_examples=TestCase.max_examples)}"
