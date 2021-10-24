@@ -1,9 +1,33 @@
 import csv
-from format_tests import format_tests
 import glob
 import logging
 import os
 import unittest
+
+from format_tests import format_tests
+
+
+class TestResult(unittest.TextTestResult):
+    # noinspection PyTypeChecker
+    def printErrorList(self, flavour, errors):
+        group_map = {}
+        ungrouped_errors = []
+        for test, error in errors:
+            if "group" in test.params:
+                group = test.params["group"]
+                if group in group_map:
+                    group_map[group].append((test, error))
+                else:
+                    group_map[group] = [(test, error)]
+            else:
+                ungrouped_errors.append((test, error))
+
+        for group in sorted(group_map.keys()):
+            self.stream.write(f"::group::{group}\n")
+            super().printErrorList(flavour, group_map[group])
+            self.stream.write("::endgroup::\n")
+
+        super().printErrorList(flavour, ungrouped_errors)
 
 
 class TestCase(unittest.TestCase):
