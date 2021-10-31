@@ -9,6 +9,10 @@ from format_tests import format_tests
 
 
 class ConsecutiveSpacesTest(unittest.TestCase):
+    def test_empty(self):
+        format_test = format_tests.ConsecutiveSpaces()
+        self.assertTrue(format_test.passed)
+
     def test_row(self):
         format_test = format_tests.ConsecutiveSpaces()
         format_test.test(["a", "b", "c"])
@@ -39,6 +43,10 @@ class ConsecutiveSpacesTest(unittest.TestCase):
 
 
 class EmptyHeadersTest(unittest.TestCase):
+    def test_empty(self):
+        format_test = format_tests.EmptyHeaders()
+        self.assertTrue(format_test.passed)
+
     def test_headers(self):
         format_test = format_tests.EmptyHeaders()
         format_test.test(["a", "b", "c"])
@@ -54,6 +62,10 @@ class EmptyHeadersTest(unittest.TestCase):
 
 
 class EmptyRowsTest(unittest.TestCase):
+    def test_empty(self):
+        format_test = format_tests.EmptyRows()
+        self.assertTrue(format_test.passed)
+
     def test_row(self):
         format_test = format_tests.EmptyRows()
         format_test.test(["a", "b", ""])
@@ -75,6 +87,10 @@ class EmptyRowsTest(unittest.TestCase):
 
 
 class InconsistentNumberOfColumnsTest(unittest.TestCase):
+    def test_empty(self):
+        format_test = format_tests.InconsistentNumberOfColumns(["a", "b", "c"])
+        self.assertTrue(format_test.passed)
+
     def test_row(self):
         headers = ["a", "b", "c"]
 
@@ -103,6 +119,10 @@ class InconsistentNumberOfColumnsTest(unittest.TestCase):
 
 
 class LeadingAndTrailingSpacesTest(unittest.TestCase):
+    def test_empty(self):
+        format_test = format_tests.LeadingAndTrailingSpaces()
+        self.assertTrue(format_test.passed)
+
     def test_row(self):
         format_test = format_tests.LeadingAndTrailingSpaces()
         format_test.test(["a", "b", "c"])
@@ -131,6 +151,10 @@ class LeadingAndTrailingSpacesTest(unittest.TestCase):
 
 
 class LowercaseHeadersTest(unittest.TestCase):
+    def test_empty(self):
+        format_test = format_tests.LowercaseHeaders()
+        self.assertTrue(format_test.passed)
+
     def test_headers(self):
         format_test = format_tests.LowercaseHeaders()
         format_test.test(["a", "b", "c"])
@@ -146,6 +170,10 @@ class LowercaseHeadersTest(unittest.TestCase):
 
 
 class NonIntegerVotesTest(unittest.TestCase):
+    def test_empty(self):
+        format_test = format_tests.NonIntegerVotes(["a", "b", "c"])
+        self.assertTrue(format_test.passed)
+
     def test_headers(self):
         format_test = format_tests.NonIntegerVotes(["a", "b", "c"])
         format_test.test(["a", "1.2", "c"])
@@ -177,6 +205,10 @@ class NonIntegerVotesTest(unittest.TestCase):
 
 
 class PrematureLineBreaks(unittest.TestCase):
+    def test_empty(self):
+        format_test = format_tests.PrematureLineBreaks()
+        self.assertTrue(format_test.passed)
+
     def test_row(self):
         format_test = format_tests.PrematureLineBreaks()
         format_test.test(["a", "b", "c"])
@@ -198,6 +230,10 @@ class PrematureLineBreaks(unittest.TestCase):
 
 
 class TabCharacters(unittest.TestCase):
+    def test_empty(self):
+        format_test = format_tests.TabCharacters()
+        self.assertTrue(format_test.passed)
+
     def test_row(self):
         format_test = format_tests.TabCharacters()
         format_test.test(["a", "b", "c"])
@@ -219,6 +255,10 @@ class TabCharacters(unittest.TestCase):
 
 
 class UnknownHeadersTest(unittest.TestCase):
+    def test_empty(self):
+        format_test = format_tests.UnknownHeaders()
+        self.assertTrue(format_test.passed)
+
     def test_headers(self):
         format_test = format_tests.UnknownHeaders()
         format_test.test(["a", "b", "c"])

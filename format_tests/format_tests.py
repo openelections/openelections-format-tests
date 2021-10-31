@@ -78,7 +78,7 @@ class EmptyHeaders(FormatTest):
     def __init__(self):
         super().__init__()
         self.__headers = []
-        self.__passed = False
+        self.__passed = True
 
     @property
     def passed(self):
@@ -96,7 +96,7 @@ class LowercaseHeaders(FormatTest):
     def __init__(self):
         super().__init__()
         self.__headers = []
-        self.__passed = False
+        self.__passed = True
 
     @property
     def passed(self):
@@ -114,7 +114,7 @@ class MissingHeaders(FormatTest):
     def __init__(self, required_headers: set[str]):
         super().__init__()
         self.__headers = []
-        self.__passed = False
+        self.__passed = True
         self.__required_headers = required_headers
 
     @property
@@ -133,7 +133,7 @@ class UnknownHeaders(FormatTest):
     def __init__(self):
         super().__init__()
         self.__headers = []
-        self.__passed = False
+        self.__passed = True
 
     @property
     def passed(self):
