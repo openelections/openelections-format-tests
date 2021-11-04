@@ -1,9 +1,34 @@
 import csv
-from format_tests import format_tests
 import glob
 import logging
 import os
+import pathlib
 import unittest
+
+from format_tests import format_tests
+
+
+class TestResult(unittest.TextTestResult):
+    # noinspection PyTypeChecker
+    def printErrorList(self, flavour, errors):
+        group_map = {}
+        ungrouped_errors = []
+        for test, error in errors:
+            if "group" in test.params:
+                group = test.params["group"]
+                if group in group_map:
+                    group_map[group].append((test, error))
+                else:
+                    group_map[group] = [(test, error)]
+            else:
+                ungrouped_errors.append((test, error))
+
+        for group in sorted(group_map.keys()):
+            self.stream.write(f"::group::{group}\n")
+            super().printErrorList(flavour, group_map[group])
+            self.stream.write("::endgroup::\n")
+
+        super().printErrorList(flavour, ungrouped_errors)
 
 
 class TestCase(unittest.TestCase):
@@ -47,6 +72,7 @@ class FileFormatTests(TestCase):
     def test_format(self):
         for csv_file in FileFormatTests.__get_csv_files():
             short_path = os.path.relpath(csv_file, start=TestCase.root_path)
+            year = pathlib.Path(short_path).parts[0]
 
             tests = set()
 
@@ -63,7 +89,7 @@ class FileFormatTests(TestCase):
             tests.add(format_tests.PrematureLineBreaks())
             tests.add(format_tests.TabCharacters())
 
-            with self.subTest(msg=f"{short_path}"):
+            with self.subTest(msg=f"{short_path}", group=year):
                 with open(csv_file, "r") as csv_data:
                     reader = csv.reader(csv_data)
                     headers = next(reader)
@@ -83,7 +109,7 @@ class FileFormatTests(TestCase):
                 short_message = ""
                 full_message = ""
                 is_first_message = True
-                for test in tests:
+                for test in sorted(tests, key=lambda x: type(x).__name__):
                     if not test.passed:
                         passed = False
                         short_message += f"\n\n* {test.get_failure_message(max_examples=TestCase.max_examples)}"
