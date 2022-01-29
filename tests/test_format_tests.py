@@ -273,10 +273,40 @@ class UnknownHeadersTest(unittest.TestCase):
         self.assertRegex(failure_message, f"Header.*" + re.escape(f"{bad_header}") + ".*unknown entries")
 
 
+class WhitespaceInHeadersTest(unittest.TestCase):
+    def test_empty(self):
+        format_test = format_tests.WhitespaceInHeaders()
+        self.assertTrue(format_test.passed)
+
+    def test_headers(self):
+        format_test = format_tests.WhitespaceInHeaders()
+        format_test.test(["a", "b", "c"])
+        self.assertTrue(format_test.passed)
+
+        bad_headers = [
+            ["a", "b ", "c"],
+            ["a", " b", "c"],
+            ["a", "b\n", "c"],
+            ["a", "\nb", "c"],
+            ["a", "b\t", "c"],
+            ["a", "\tb", "c"],
+            ["a", "b c", "d"],
+            ["a", "b\nc", "d"],
+            ["a", "b\tc", "d"],
+        ]
+        for bad_header in bad_headers:
+            format_test = format_tests.WhitespaceInHeaders()
+            format_test.test(bad_header)
+            self.assertFalse(format_test.passed)
+
+            failure_message = format_test.get_failure_message()
+            self.assertRegex(failure_message, f"Header.*" + re.escape(f"{bad_header}") + ".*whitespace")
+
+
 class RunTestsTest(unittest.TestCase):
     bad_data_dir = None
     bad_rows = [
-        ["County", "unknown", "absentee", "votes", ""],  # Lowercase, unknown, and empty headers
+        ["County", "unknown", "absentee votes", "votes", ""],  # Lowercase, unknown, whitespace, and empty headers
         ["", "", "", "", ""],  # Empty rows
         ["a", "b  c", "1", "2", "3"],  # Consecutive whitespace
         ["a", "b", "c", "1", "2", "3"],  # Inconsistent number of columns
@@ -346,6 +376,7 @@ class RunTestsTest(unittest.TestCase):
 
         self.assertRegex(log_file_contents, "Header.*" + re.escape(f"{self.bad_rows[0]}") + ".*lowercase")
         self.assertRegex(log_file_contents, "Header.*" + re.escape(f"{self.bad_rows[0]}") + ".*unknown")
+        self.assertRegex(log_file_contents, "Header.*" + re.escape(f"{self.bad_rows[0]}") + ".*whitespace")
         self.assertRegex(log_file_contents, "Header.*" + re.escape(f"{self.bad_rows[0]}") + ".*empty")
         self.assertRegex(log_file_contents, "1 empty rows")
         self.assertRegex(log_file_contents, "1 rows.*consecutive whitespace")
