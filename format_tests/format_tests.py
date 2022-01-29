@@ -147,6 +147,26 @@ class UnknownHeaders(FormatTest):
         self.__passed = "unknown" not in [x.strip().lower() for x in headers]
 
 
+class WhitespaceInHeaders(FormatTest):
+    regex = re.compile(r"\s")
+
+    def __init__(self):
+        super().__init__()
+        self.__headers = []
+        self.__passed = True
+
+    @property
+    def passed(self):
+        return self.__passed
+
+    def get_failure_message(self, max_examples=0):
+        return f"Header {self.__headers} contains whitespace characters."
+
+    def test(self, headers: list[str]):
+        self.__headers = headers
+        self.__passed = not any(bool(WhitespaceInHeaders.regex.search(x)) for x in self.__headers)
+
+
 class ConsecutiveSpaces(ValueTest):
     regex = re.compile(r"\s{2,}")
 

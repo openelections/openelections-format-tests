@@ -80,6 +80,7 @@ class FileFormatTests(TestCase):
                 format_tests.EmptyHeaders(),
                 format_tests.LowercaseHeaders(),
                 format_tests.UnknownHeaders(),
+                format_tests.WhitespaceInHeaders(),
             }
             tests.update(header_tests)
 
