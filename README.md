@@ -1,6 +1,9 @@
 [![Build Status](https://github.com/openelections/openelections-format-tests/actions/workflows/unit_tests.yml/badge.svg?branch=master)](https://github.com/openelections/openelections-format-tests/actions/workflows/unit_tests.yml?query=branch%3Amaster)
 
-# OpenElections Data Format Tests
+# OpenElections Data Format Tests (DEPRECATED)
+
+**These tests have been incorporated into the [data tests](https://github.com/openelections/openelections-data-tests).**
+
 A collection of tests to validate the format of OpenElections data files.
 
 ## Usage
